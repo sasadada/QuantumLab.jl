@@ -159,7 +159,11 @@ function evaluateSCF(
   basis::Union{GaussianBasis,Vector{Shell},Vector{LibInt2Shell},BasisSet},
   geometry::Union{Geometry,String},
   initialGuessDensity::Union{Matrix,InitialGuess},
-  electronNumber::Integer;
+  electronNumber::Integer,
+  bastwo::Union{GaussianBasis,Vector{Shell},Vector{LibInt2Shell},BasisSet},
+  set::BasisSet,
+  el::String,
+  ecp::Bool;
   detailedinfo::Bool=true,
   info::Bool=true,
   energyConvergenceCriterion::Float64 = 1e-8,
@@ -185,7 +189,7 @@ function evaluateSCF(
 
   S = computeMatrixOverlap(basis)
   T = computeMatrixKinetic(basis)
-  V = computeMatrixNuclearAttraction(basis,geometry)
+  V = computeMatrixNuclearAttraction(basis,geometry,bastwo,set,el,ecp)
   Pinit = InitialGuessModule.computeDensityMatrixGuess(initialGuessDensity,size(S)[1])
   Vnn = computeEnergyInteratomicRepulsion(geometry)
 

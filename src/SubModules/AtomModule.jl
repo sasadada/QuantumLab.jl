@@ -49,6 +49,7 @@ atomicNumbers = Dict{String,Int}(
   "Mo" =>	42,
   "Tc" =>	43,
   "Ru" =>	44,
+  "RU" => 44,
   "Rh" =>	45,
   "Pd" =>	46,
   "Ag" =>	47,

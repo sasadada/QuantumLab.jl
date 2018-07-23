@@ -1,0 +1,122 @@
+function ThreeCenter(basis::GaussianBasis,set::BasisSet,el::String, geome::Geometry, basis3::GaussianBasis)
+a = zeros(length(basis.contractedBFs),length(basis3.contractedBFs))
+s = LQuantumNumber("S")
+s = "$s"
+p = LQuantumNumber("P")
+p = "$p"
+d = LQuantumNumber("D")
+d = "$d"
+f = LQuantumNumber("F")
+f  = "$f"
+g = LQuantumNumber("G")
+g = "$g"
+LQN = LQuantumNumber
+LQNS = String
+
+for j in 1:length(basis.contractedBFs)
+for k in 1:length(basis3.contractedBFs)
+
+L = basis.contractedBFs[j].primitiveBFs[1].mqn.x + basis.contractedBFs[j].primitiveBFs[1].mqn.y + basis.contractedBFs[j].primitiveBFs[1].mqn.z
+fun = BasisSetModule.ContractedGaussianBasisFunctionDefinition
+
+for ulfun in set.definitions[Element(el)]
+ LQN = ulfun.lQuantumNumber
+ LQNS = "$LQN"
+ 	if L==0
+ 	if LQNS == s
+ 	fun = ulfun
+ 	end
+ 	end
+
+ 	if L==1
+ 	if LQNS == p
+ 	fun = ulfun
+ 	end
+ 	end
+ 	
+ 	if L==2
+ 	if LQNS == d
+ 	fun = ulfun
+ 	end
+ 	end
+ 	
+ 	if L==3
+ 	if LQNS == f
+ 	fun = ulfun
+ 	end
+ 	end
+ 	
+ 	if L==4
+ 	if LQNS == g
+ 	fun = ulfun
+ 	end
+ 	end
+ 	
+end
+#=
+if L == 0 
+	for ulfun in set.definitions[Element(el)]
+	LQN = ulfun.lQuantumNumber 
+	LQNS = "$LQN"
+		if LQNS == s
+		fun = ulfun
+		end
+	end
+elseif L == 1  
+	for ulfun in set.definitions[Element(el)]
+	LQN = ulfun.lQuantumNumber
+	LQNS = "$LQN"
+		if LQNS == p
+		fun = ulfun
+		end
+	end
+elseif L == 2
+	for ulfun in set.definitions[Element(el)]
+	LQN = ulfun.lQuantumNumber
+	LQNS = "$LQN"
+		if LQNS == d
+		fun = ulfun
+		end
+	end
+elseif L == 3 
+	for ulfun in set.definitions[Element(el)]
+	LQN = ulfun.lQuantumNumber
+	LQNS = "$LQN"
+		if LQNS == f
+		fun = ulfun
+		end
+	end
+elseif L == 4 
+	for ulfun in set.definitions[Element(el)]
+	LQN = ulfun.lQuantumNumber
+	LQNS = "$LQN"
+		if LQNS == g
+		fun = ulfun
+		end
+	end
+=#
+
+#thanks QuantumLab
+bigel = Element(el)
+
+ECPS = BasisSetModule.ContractedGaussianBasisFunctionDefinition(LQuantumNumber("S"),fun.primitives)
+ECPV = Vector()
+push!(ECPV,ECPS)
+ecpdict = Dict(zip([Element(el)],[ECPV]))
+ecpbas = BasisSet(ecpdict) 
+
+ECP = computeBasis(ecpbas, geome, false)
+
+a[j,k] += computeIntegralThreeCenterOverlap(basis.contractedBFs[j],ECP.contractedBFs[1],basis3.contractedBFs[k]) 
+#println(basis.contractedBFs[j])
+#println(basis3.contractedBFs[k])
+#println(a[j,k])
+
+end
+end
+#end
+#end
+#end
+return a
+end
+#parse(Float64, basis.contractedBFs[1].mqn.x)

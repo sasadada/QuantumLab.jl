@@ -1,6 +1,7 @@
 module SpecialMatricesModule
 export computeMatrixKinetic, computeTensorElectronRepulsionIntegrals, computeMatrixNuclearAttraction, computeMatrixOverlap, computeMatrixCoulomb, computeMatrixExchange, computeMatrixFock
 using ..BaseModule
+using ..BasisSetModule
 using ..AtomModule
 using ..IntegralsModule
 using ..BasisModule
@@ -9,7 +10,7 @@ using TensorOperations
 using ..LibInt2Module
 using ..ShellModule
 import ..IntegralsModule.computeTensorBlockElectronRepulsionIntegrals
-
+include("3calt")
 #HELPERS
 function scatterMatrixBlocks2D(shells,totaldim::Integer,blockevaluator::Function,blocklength::Function)
   result = zeros(Float64,totaldim,totaldim)
@@ -138,8 +139,13 @@ if (LibInt2Shell != Shell)
 end
 
 #NUCLEARATTRACTION
-function computeMatrixNuclearAttraction(basis::GaussianBasis,geo::Geometry)
-  return [sum([computeIntegralNuclearAttraction(cgb1,cgb2,atom) for atom in geo.atoms]) for cgb1 in basis.contractedBFs, cgb2 in basis.contractedBFs]
+function computeMatrixNuclearAttraction(basis::GaussianBasis,geo::Geometry,basis2::GaussianBasis,set:: BasisSetModule.BasisSet,el::String,ecp::Bool)
+  a = [sum([computeIntegralNuclearAttraction(cgb1,cgb2,atom) for atom in geo.atoms]) for cgb1 in basis.contractedBFs, cgb2 in basis.contractedBFs]
+  b = 0 
+if ecp == true
+  b = ThreeCenter(basis,set,el,geo,basis2)
+end
+return a + b
 end
 
 function computeMatrixNuclearAttraction(shells::Vector{Shell},atom::Atom)

@@ -210,8 +210,18 @@ function computeIntegralThreeCenterOverlap(
   for (coeff1,pgb1) in zip(cgb1.coefficients,cgb1.primitiveBFs),
       (coeff2,pgb2) in zip(cgb2.coefficients,cgb2.primitiveBFs),
       (coeff3,pgb3) in zip(cgb3.coefficients,cgb3.primitiveBFs)
-    integral += coeff1*coeff2*coeff3*computeIntegralThreeCenterOverlap(pgb1,pgb2,pgb3)
-  end
+
+if pgb1.mqn.x == pgb3.mqn.x
+if pgb1.mqn.y == pgb3.mqn.y
+if pgb1.mqn.z == pgb3.mqn.z
+
+if isfinite(coeff2) == true
+integral += coeff1*coeff2*coeff3*computeIntegralThreeCenterOverlap(pgb1,pgb2,pgb3)
+end
+end
+end
+end
+end
   return integral
 end
 

@@ -1,8 +1,27 @@
 module BasisSetModule
-export BasisSet, readBasisSetTX93, readBasisSetGaussian, readBasisSetGAMESSUS, readBasisSetNWChem, readBasisSetDalton
+export BasisSet, readBasisSetTX93, readBasisSetGaussian, readBasisSetGAMESSUS, readBasisSetNWChem, readBasisSetDalton, EvaluateECP
 using ..BaseModule
 using ..AtomModule
 using StringParserPEG
+
+immutable EffectiveCorePotentialDefinition
+    RtermExponent::Float64
+    exponent::Float64
+    prefactor::Float64  
+  end
+
+function EvaluateECP(RtermExponent::Float64, exponent::Float64, prefactor::Float64)
+
+  ECP = EffectiveCorePotentialDefinition(RtermExponent, exponent, prefactor)
+
+  if ECP.RtermExponent == 2
+    ECP = PrimitiveGaussianBasisFunctionDefinition(ECP.exponent, ECP.prefactor) 
+  else
+    println("Effective core potentials with R Exponents other than 2 are not yet supported by Quantum Lab")
+  end
+
+end
+
 
 immutable PrimitiveGaussianBasisFunctionDefinition
     exponent::Float64
